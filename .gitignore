@@ -1,4 +1,8 @@
-/__pycache__
+# virtualenv
 /bin
 /lib
 pyvenv.cfg
+# exclude pdf
+*.pdf
+# exclude bytecode folder
+/__pycache__
