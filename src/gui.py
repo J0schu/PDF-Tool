@@ -1,12 +1,12 @@
 from PySide6.QtWidgets import QVBoxLayout, QTabWidget, QMainWindow
-from merger_page import MergerPage
-from metadata_page import MetadataPage
+from widgets import MergerPage
+from widgets import MetadataPage
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, app):
+    def __init__(self):
         super().__init__()
-        self.app = app
+
         self.setWindowTitle("PDF Merger")
         
         tab_widget = QTabWidget(self)
