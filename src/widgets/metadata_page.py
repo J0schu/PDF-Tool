@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
-
+from functions import get_author, get_creator, get_subject, get_title
 
 class MetadataPage(QWidget):
     def __init__(self):
@@ -7,6 +7,7 @@ class MetadataPage(QWidget):
 
         metadata_label_input = QLabel("input filename")
         self.metadata_line_edit_input = QLineEdit()
+        self.metadata_line_edit_input.returnPressed.connect(self.metadata_input_return_pressed)
 
         self.author_line_edit = QLineEdit()
 
@@ -20,5 +21,5 @@ class MetadataPage(QWidget):
 
     
     # metadata page functions
-    def test(self):
-        pass
+    def metadata_input_return_pressed(self):
+        self.author_line_edit.setText(get_author(self.metadata_line_edit_input.text() + ".pdf"))
