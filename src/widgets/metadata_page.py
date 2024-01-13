@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFormLayout
-from functions import get_author, get_creator, get_subject, get_title
+from functions.pdf import get_author, get_creator, get_subject, get_title
 
 class MetadataPage(QWidget):
     def __init__(self):

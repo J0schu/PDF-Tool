@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QVBoxLayout, QTabWidget, QMainWindow
-from widgets import MergerPage
-from widgets import MetadataPage
+from widgets.merger_page import MergerPage
+from widgets.metadata_page import MetadataPage
 
 
 class MainWindow(QMainWindow):

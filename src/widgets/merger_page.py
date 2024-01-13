@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
-from functions import merger
+from functions.pdf import merger
 
 class MergerPage(QWidget):
     def __init__(self):
