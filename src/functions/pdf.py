@@ -49,3 +49,17 @@ def add_keywords(filename, keywords):
     )
     with open(filename, "wb") as f:
         writer.write(f)
+
+def add_metadata(filename, author, creator, subject, title):
+    writer = PdfWriter()
+    writer.add_metadata(
+        {
+        "/Author": author,
+        "/Creator": creator,
+        "/Subject": subject,
+        "/Title": title,
+        "/ModDate": time,
+        }
+    )
+    with open(filename, "wb") as f:
+        writer.write(f)
