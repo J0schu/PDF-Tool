@@ -64,15 +64,16 @@ class MergerPage(QWidget):
 
     def button_merge_clicked(self):
         if len(self.pdfs) < 2:
-            ret = QMessageBox.critical(self, "Message Title", 
+            ret = QMessageBox.critical(self, "critical", 
                                    "Select at least two PDFs",
                                    QMessageBox.Ok)
             return
-        self.output_name = self.pdf_output_name.text() + ".pdf"
-        merger(self.pdfs, self.output_name)
-        self.pdf_output_name.clear()
-        self.list.clear()
-        self.pdfs.clear()
+        else:
+            self.output_name = self.pdf_output_name.text() + ".pdf"
+            merger(self.pdfs, self.output_name)
+            self.pdf_output_name.clear()
+            self.list.clear()
+            self.pdfs.clear()
     
     def button_clear_clicked(self):
         self.pdfs.clear()

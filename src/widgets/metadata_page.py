@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFormLayout
+from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QFormLayout
 from functions.pdf import get_author, get_creator, get_subject, get_title, add_metadata
 
 class MetadataPage(QWidget):
@@ -52,4 +52,9 @@ class MetadataPage(QWidget):
         self.title_line_edit.setText(get_title(self.metadata_line_edit_input.text() + ".pdf"))
 
     def button_write_metadate_clicked(self):
-        add_metadata(self.metadata_line_edit_input.text() + ".pdf", self.author_line_edit.text(), self.creator_line_edit.text(), self.subject_line_edit.text(), self.title_line_edit.text())
+        if self.metadata_line_edit_input.text() == '':
+            ret = QMessageBox.critical(self, "critical",
+                                       "Select a PDF filename",
+                                       QMessageBox.Ok)
+        else:
+            add_metadata(self.metadata_line_edit_input.text() + ".pdf", self.author_line_edit.text(), self.creator_line_edit.text(), self.subject_line_edit.text(), self.title_line_edit.text())
