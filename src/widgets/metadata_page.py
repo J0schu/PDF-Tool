@@ -5,6 +5,7 @@ class MetadataPage(QWidget):
     def __init__(self):
         super().__init__()
 
+        # add input, output -> label and line edit
         metadata_label_input = QLabel("input filename: ")
         self.metadata_line_edit_input = QLineEdit()
         self.metadata_line_edit_input.returnPressed.connect(self.metadata_input_return_pressed)
@@ -24,6 +25,7 @@ class MetadataPage(QWidget):
         button_write_metadate = QPushButton("Write Metadata")
         button_write_metadate.clicked.connect(self.button_write_metadate_clicked)
 
+        # build Layout
         formlayout= QFormLayout()
         formlayout.addRow(metadata_label_input, self.metadata_line_edit_input)
         formlayout.addRow(author_label, self.author_line_edit)
@@ -57,4 +59,8 @@ class MetadataPage(QWidget):
                                        "Select a PDF filename",
                                        QMessageBox.Ok)
         else:
-            add_metadata(self.metadata_line_edit_input.text() + ".pdf", self.author_line_edit.text(), self.creator_line_edit.text(), self.subject_line_edit.text(), self.title_line_edit.text())
+            add_metadata(self.metadata_line_edit_input.text() + ".pdf",
+                          self.author_line_edit.text(),
+                          self.creator_line_edit.text(),
+                            self.subject_line_edit.text(),
+                            self.title_line_edit.text())
