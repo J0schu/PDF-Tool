@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
+from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFileDialog
 from functions.pdf import merger
+from functions.fun import pathlist_to_str
 
 class MergerPage(QWidget):
     def __init__(self):
@@ -14,8 +15,9 @@ class MergerPage(QWidget):
         self.list.setStyleSheet('font-size: 14px;')
 
         self.label_input_name = QLabel("input filename")
-        self.pdf_input_name = QLineEdit()
-        self.pdf_input_name.returnPressed.connect(self.input_return_pressed)
+        self.pdf_input_name = QLabel()
+        button_open = QPushButton("open file")
+        button_open.pressed.connect(self.button_open_clicked)
 
         self.label_output_name = QLabel("output filename")
         self.pdf_output_name = QLineEdit()
@@ -23,10 +25,11 @@ class MergerPage(QWidget):
         button_merge = QPushButton("Merge")
         button_merge.clicked.connect(self.button_merge_clicked)
 
-        button_clear = QPushButton("Clear")
-        button_clear.clicked.connect(self.button_clear_clicked)
+        button_remove = QPushButton("remove")
+        button_remove.clicked.connect(self.button_remove_clicked)
 
         button_up = QPushButton("Up")
+        button_up.pressed.connect(self.button_up_pressed)
 
         button_down = QPushButton("Down")
 
@@ -36,12 +39,15 @@ class MergerPage(QWidget):
         v_button_layout.addWidget(button_merge)
         v_button_layout.addWidget(button_up)
         v_button_layout.addWidget(button_down)
-        v_button_layout.addWidget(button_clear)
+        v_button_layout.addWidget(button_remove)
 
+        h_line_edit = QHBoxLayout()
+        h_line_edit.addWidget(self.pdf_input_name)
+        h_line_edit.addWidget(button_open)
         # add input, output -> label and line edit
         v_line_edit_layout = QVBoxLayout()
         v_line_edit_layout.addWidget(self.label_input_name)
-        v_line_edit_layout.addWidget(self.pdf_input_name)
+        v_line_edit_layout.addLayout(h_line_edit)
         v_line_edit_layout.addWidget(self.label_output_name)
         v_line_edit_layout.addWidget(self.pdf_output_name)
         
@@ -75,6 +81,28 @@ class MergerPage(QWidget):
             self.list.clear()
             self.pdfs.clear()
     
-    def button_clear_clicked(self):
-        self.pdfs.clear()
-        self.list.clear()
+    def button_remove_clicked(self):
+        currentIndex = self.list.currentRow()
+        item = self.list.item(currentIndex)
+        if item is None:
+            return
+        question = QMessageBox.question(self, "remove Item",
+                                        "Do you want to remove : " + item.text(),
+                                        QMessageBox.Yes | QMessageBox.No)
+        if question == QMessageBox.Yes:
+            item = self.list.takeItem(currentIndex)
+            del item
+        # self.pdfs.clear()
+        # self.list.clear()
+    
+    def button_open_clicked(self):
+        dialog = QFileDialog()
+        dialog.setNameFilter("*pdf")
+        dialogSuccessful = dialog.exec()
+
+        if dialogSuccessful:
+            selectedFiles = dialog.selectedFiles()
+            self.list.addItem(pathlist_to_str(selectedFiles))
+
+    def button_up_pressed(self):
+        pass
