@@ -7,7 +7,6 @@ class MergerPage(QWidget):
         super().__init__()
 
         self.pdfs = []
-        self.output_name = ""
 
         # merger Page
 
@@ -32,6 +31,7 @@ class MergerPage(QWidget):
         button_up.pressed.connect(self.button_up_pressed)
 
         button_down = QPushButton("Down")
+        button_down.pressed.connect(self.button_down_pressed)
 
         # add Widgets to Page
         # add action buttons
@@ -63,21 +63,18 @@ class MergerPage(QWidget):
         self.setLayout(v_layout)
 
         # merger page functions
-    def input_return_pressed(self):
-        self.pdfs.append(self.pdf_input_name.text() + ".pdf")
-        self.list.addItem(self.pdf_input_name.text() + ".pdf")
-        self.pdf_input_name.clear()
-
     def button_merge_clicked(self):
+        for x in range(self.list.count()):
+          self.pdfs.append(self.list.item(x).text())
         if len(self.pdfs) < 2:
             ret = QMessageBox.critical(self, "critical", 
                                    "Select at least two PDFs",
                                    QMessageBox.Ok)
+            self.pdfs.clear()
             return
         else:
-            self.output_name = self.pdf_output_name.text() + ".pdf"
-            merger(self.pdfs, self.output_name)
-            self.pdf_output_name.clear()
+            filename = QFileDialog.getSaveFileName(self,"Save File", "", "PDF File (*.pdf)")
+            merger(self.pdfs, str(filename[0]) + ".pdf")
             self.list.clear()
             self.pdfs.clear()
     
@@ -92,8 +89,6 @@ class MergerPage(QWidget):
         if question == QMessageBox.Yes:
             item = self.list.takeItem(currentIndex)
             del item
-        # self.pdfs.clear()
-        # self.list.clear()
     
     def button_open_clicked(self):
         dialog = QFileDialog()
@@ -105,4 +100,14 @@ class MergerPage(QWidget):
             self.list.addItem(pathlist_to_str(selectedFiles))
 
     def button_up_pressed(self):
-        pass
+        index = self.list.currentRow()
+        if index >= 1:
+            item = self.list.takeItem(index)
+            self.list.insertItem(index-1, item)
+            self.list.setCurrentItem(item)
+    def button_down_pressed(self):
+        index = self.list.currentRow()
+        if index < self.list.count()-1:
+            item = self.list.takeItem(index)
+            self.list.insertItem(index+1, item)
+            self.list.setCurrentItem(item)
