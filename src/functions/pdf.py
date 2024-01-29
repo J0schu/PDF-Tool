@@ -1,18 +1,19 @@
 from datetime import datetime
 from pypdf import PdfMerger, PdfReader, PdfWriter
-import os
-import pwd
 
 time = datetime.utcnow().strftime(f"D\072%Y%m%d%H%M%S")
 
-def merger(pdfs, output_name):
+def merger(pdfs, output_name, author, title, subject, keywords):
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
     merger.add_metadata(
         {
-        "/Author": pwd.getpwuid(os.getuid())[4], # only for Linux
+        "/Author": author,
         "/Producer": "PDF-Tool",
+        "/Title": title,
+        "/Subject": subject,
+        "/Keywords": keywords,
         "/CreationDate" : time,
         "/ModTime": time,
         }
