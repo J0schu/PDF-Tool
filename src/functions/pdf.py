@@ -59,6 +59,7 @@ def add_metadata(filename, author, creator, subject, title):
     writer.add_metadata(
         {
         "/Author": author,
+        "/Producer": "PDF-Tool",
         "/Creator": creator,
         "/Subject": subject,
         "/Title": title,

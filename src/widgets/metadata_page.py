@@ -48,7 +48,7 @@ class MetadataPage(QWidget):
     
     # metadata page functions
     def button_write_metadate_clicked(self):
-        if self.metadata_line_edit_input.text() == '':
+        if self.author_line_edit.text() == '':
             ret = QMessageBox.critical(self, "critical",
                                        "Select a PDF filename",
                                        QMessageBox.Ok)
