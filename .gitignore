@@ -8,7 +8,9 @@ pyvenv.cfg
 /src/__pycache__
 /src/functions/__pycache__
 /src/widgets/__pycache__
-#exclude build folders
+# exclude build folders
 /build
 /dist
 /pdf_merger.egg-info
+# intellij
+/.idea
