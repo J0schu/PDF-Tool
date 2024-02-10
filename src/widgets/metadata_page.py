@@ -11,17 +11,23 @@ class MetadataPage(QWidget):
         metadata_button_input.clicked.connect(self.metadata_input_clicked)
         self.metadata_file_label = QLabel()
 
-        author_label = QLabel("Author: ")
+        author_label = QLabel("Author ")
         self.author_line_edit = QLineEdit()
 
-        creator_label = QLabel("Creator: ")
-        self.creator_line_edit = QLineEdit()
+        title_label = QLabel("Title ")
+        self.title_line_edit = QLineEdit()
 
-        subject_label = QLabel("Subject: ")
+        subject_label = QLabel("Subject ")
         self.subject_line_edit = QLineEdit()
 
-        title_label = QLabel("Title: ")
-        self.title_line_edit = QLineEdit()
+        creator_label = QLabel("Creator ")
+        self.creator_line_edit = QLineEdit()
+
+        keywords_label = QLabel("Keywords ")
+        self.keywords_line_edit = QLineEdit()
+
+        custom_label = QLabel("Custom ")
+        self.custom_line_edit = QLineEdit()
 
         button_write_metadate = QPushButton("Write Metadata")
         button_write_metadate.clicked.connect(self.button_write_metadate_clicked)
@@ -30,9 +36,11 @@ class MetadataPage(QWidget):
         formlayout= QFormLayout()
         formlayout.addRow(metadata_button_input, self.metadata_file_label)
         formlayout.addRow(author_label, self.author_line_edit)
-        formlayout.addRow(creator_label, self.creator_line_edit)
-        formlayout.addRow(subject_label, self.subject_line_edit)
         formlayout.addRow(title_label, self.title_line_edit)
+        formlayout.addRow(subject_label, self.subject_line_edit)
+        formlayout.addRow(keywords_label, self.keywords_line_edit)
+        formlayout.addRow(creator_label, self.creator_line_edit)
+        formlayout.addRow(custom_label, self.custom_line_edit)
 
         vbox1 = QVBoxLayout()
         vbox1.addLayout(formlayout)
