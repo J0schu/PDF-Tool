@@ -26,11 +26,6 @@ def get_author(filename):
     meta = reader.metadata
     return meta.author
 
-def get_creator(filename):
-    reader = PdfReader(filename)
-    meta = reader.metadata
-    return meta.creator
-
 def get_subject(filename):
     reader = PdfReader(filename)
     meta = reader.metadata
@@ -56,6 +51,9 @@ def add_metadata(filename, author, title, subject, keywords, custom):
     writer = PdfWriter()
     for page in reader.pages:
         writer.add_page(page)
+    # add old meta data
+    metadata = reader.metadata
+    writer.add_metadata(metadata)
     writer.add_metadata(
         {
         "/Author": author,
