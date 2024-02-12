@@ -51,7 +51,7 @@ def add_keywords(filename, keywords):
     with open(filename, "wb") as f:
         writer.write(f)
 
-def add_metadata(filename, author, creator, subject, title):
+def add_metadata(filename, author, title, subject, keywords, custom):
     reader = PdfReader(filename)
     writer = PdfWriter()
     for page in reader.pages:
@@ -60,10 +60,11 @@ def add_metadata(filename, author, creator, subject, title):
         {
         "/Author": author,
         "/Producer": "PDF-Tool",
-        "/Creator": creator,
-        "/Subject": subject,
         "/Title": title,
+        "/Subject": subject,
+        "/Keywords": keywords,
         "/ModDate": time,
+        "/CustomField": custom,
         }
     )
     with open(filename, "wb") as f:

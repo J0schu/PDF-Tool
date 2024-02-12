@@ -20,9 +20,6 @@ class MetadataPage(QWidget):
         subject_label = QLabel("Subject ")
         self.subject_line_edit = QLineEdit()
 
-        creator_label = QLabel("Creator ")
-        self.creator_line_edit = QLineEdit()
-
         keywords_label = QLabel("Keywords ")
         self.keywords_line_edit = QLineEdit()
 
@@ -39,7 +36,6 @@ class MetadataPage(QWidget):
         formlayout.addRow(title_label, self.title_line_edit)
         formlayout.addRow(subject_label, self.subject_line_edit)
         formlayout.addRow(keywords_label, self.keywords_line_edit)
-        formlayout.addRow(creator_label, self.creator_line_edit)
         formlayout.addRow(custom_label, self.custom_line_edit)
 
         vbox1 = QVBoxLayout()
@@ -62,10 +58,12 @@ class MetadataPage(QWidget):
                                        QMessageBox.Ok)
         else:
             add_metadata(self.metadata_file_label.text(),
-                          self.author_line_edit.text(),
-                          self.creator_line_edit.text(),
-                            self.subject_line_edit.text(),
-                            self.title_line_edit.text())
+                        self.author_line_edit.text(),
+                        self.title_line_edit.text(),
+                        self.subject_line_edit.text(),
+                        self.keywords_line_edit.text(),
+                        self.custom_line_edit.text())
+                        
     
     def metadata_input_clicked(self):
         dialog = QFileDialog()
