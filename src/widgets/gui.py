@@ -9,8 +9,7 @@ import webbrowser
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PDF Merger")
-        
+        self.setWindowTitle("PDF-Tool")
 
         tab_widget = QTabWidget(self)
 
@@ -30,15 +29,14 @@ class MainWindow(QMainWindow):
         about_action = help_menu.addAction("About")
         about_action.triggered.connect(self.about_clicked)
 
-
         self.setCentralWidget(tab_widget)
         
         # about messagebox content
         osversion = platform.platform()
         qtversion = PySide6.QtCore.__version__ 
         self.about_text = """
-        Version : 0.0.1
-        Release : 22.01.24
+        Version : 1.0
+        Release : 12.02.24
         Qt : """ + qtversion + """
         OS : """ + osversion + """
                         """
