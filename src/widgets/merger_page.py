@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QListWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox, QFileDialog, QFormLayout
 from functions.pdf import merger
 from functions.fun import pathlist_to_str
+import platform
 
 class MergerPage(QWidget):
     def __init__(self):
@@ -74,6 +75,7 @@ class MergerPage(QWidget):
 
         # merger page functions
     def button_merge_clicked(self):
+        pdfname = ''
         for x in range(self.list.count()):
           self.pdfs.append(self.list.item(x).text())
         if len(self.pdfs) < 2:
@@ -83,7 +85,11 @@ class MergerPage(QWidget):
             self.pdfs.clear()
             return
         filename = QFileDialog.getSaveFileName(self,"Save File", "", "PDF File (*.pdf)")
-        merger(self.pdfs, str(filename[0]) + ".pdf",
+        if platform.system() == 'Windows':
+            pdfname = str(filename[0])
+        else:
+            pdfname =str(filename[0]) + ".pdf"
+        merger(self.pdfs, pdfname,
                 self.line_edit_author.text(),
                 self.line_edit_title.text(),
                 self.line_edit_subject.text(),

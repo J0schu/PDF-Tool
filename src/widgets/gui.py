@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
         qtversion = PySide6.QtCore.__version__ 
         self.about_text = """
         Version : 1.0
-        Release : 12.02.24
+        Build : 12.02.24
         Qt : """ + qtversion + """
         OS : """ + osversion + """
                         """
