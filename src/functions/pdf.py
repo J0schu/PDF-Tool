@@ -1,10 +1,10 @@
 from datetime import datetime
-from pypdf import PdfMerger, PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 time = datetime.utcnow().strftime(f"D\072%Y%m%d%H%M%S")
 
-def merger(pdfs, output_name, author, title, subject, keywords):
-    merger = PdfMerger()
+def merger(pdfs, output_name, author="", title="", subject="", keywords=""):
+    merger = PdfWriter()
     for pdf in pdfs:
         merger.append(pdf)
     merger.add_metadata(

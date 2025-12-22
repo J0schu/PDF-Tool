@@ -7,6 +7,7 @@ in
         with python-pkgs; [
           pyside6
           pypdf
+          ocrmypdf
         ]))
     ];
   }
