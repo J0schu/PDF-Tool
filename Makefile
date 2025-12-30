@@ -11,7 +11,7 @@ clean:
 	if exist "./pdf_merger.egg-info" rd /s /q pdf_merger.egg-info
 else
 run:
-	python3 src/__main__.py
+	python3 -m pdf_tool
 
 build: setup.py
 	python3 setup.py build bdist_wheel

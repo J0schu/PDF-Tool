@@ -1,28 +1,44 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QAbstractItemView, QFileDialog, QPushButton, QLabel, QMessageBox
-from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtPdf import QPdfDocument
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 from pdf_tool.functions.pdf import merger
+
 
 class Merger(QWidget):
 
     go_home = Signal()
 
     def add_files(self):
-        files, _ = QFileDialog.getOpenFileNames(self, "Select Files", "", "PDF Files (*.pdf)")
+        files, _ = QFileDialog.getOpenFileNames(
+            self, "Select Files", "", "PDF Files (*.pdf)"
+        )
         self.list_widget.addItems(files)
 
     def merge(self):
-        files = [ self.list_widget.item(i).text() 
-            for i in range(self.list_widget.count()) ]
+        files = [
+            self.list_widget.item(i).text() for i in range(self.list_widget.count())
+        ]
         print(files)
         if len(files) < 2:
-            ret = QMessageBox.critical(self, "critical", 
-                                   "Select at least two PDFs",
-                                   QMessageBox.Ok)
+            ret = QMessageBox.critical(
+                self, "critical", "Select at least two PDFs", QMessageBox.Ok
+            )
             return
-        user_mergename, _ = QFileDialog.getSaveFileName(self,"Save File", "", "PDF File (*.pdf)")
+        user_mergename, _ = QFileDialog.getSaveFileName(
+            self, "Save File", "", "PDF File (*.pdf)"
+        )
         if user_mergename:
             mergename = user_mergename
             if not user_mergename.lower().endswith(".pdf"):
@@ -32,7 +48,6 @@ class Merger(QWidget):
     def remove_file(self):
         self.pdf_doc.load("")
         self.list_widget.takeItem(self.list_widget.currentRow())
-
 
     def clear_list(self):
         self.pdf_doc.load("")

@@ -1,6 +1,17 @@
-from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QFormLayout, QFileDialog
-from pdf_tool.functions.pdf import get_author, get_subject, get_title, add_metadata
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QFormLayout,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+
 from pdf_tool.functions.fun import pathlist_to_str
+from pdf_tool.functions.pdf import add_metadata, get_author, get_subject, get_title
+
 
 class MetadataPage(QWidget):
     def __init__(self):
@@ -29,7 +40,7 @@ class MetadataPage(QWidget):
         button_write_metadate.clicked.connect(self.button_write_metadate_clicked)
 
         # build Layout
-        formlayout= QFormLayout()
+        formlayout = QFormLayout()
         formlayout.addRow(metadata_button_input, self.metadata_file_label)
         formlayout.addRow(author_label, self.author_line_edit)
         formlayout.addRow(title_label, self.title_line_edit)
@@ -49,25 +60,27 @@ class MetadataPage(QWidget):
 
     # metadata page functions
     def button_write_metadate_clicked(self):
-        if self.author_line_edit.text() == '':
-            ret = QMessageBox.critical(self, "critical",
-                                       "Select a PDF filename",
-                                       QMessageBox.Ok)
+        if self.author_line_edit.text() == "":
+            ret = QMessageBox.critical(
+                self, "critical", "Select a PDF filename", QMessageBox.Ok
+            )
         else:
-            add_metadata(self.metadata_file_label.text(),
-                        self.author_line_edit.text(),
-                        self.title_line_edit.text(),
-                        self.subject_line_edit.text(),
-                        self.keywords_line_edit.text(),
-                        self.custom_line_edit.text())
-            
+            add_metadata(
+                self.metadata_file_label.text(),
+                self.author_line_edit.text(),
+                self.title_line_edit.text(),
+                self.subject_line_edit.text(),
+                self.keywords_line_edit.text(),
+                self.custom_line_edit.text(),
+            )
+
             self.metadata_file_label.clear()
             self.author_line_edit.clear()
             self.title_line_edit.clear()
             self.subject_line_edit.clear()
             self.keywords_line_edit.clear()
             self.custom_line_edit.clear()
-                        
+
     def metadata_input_clicked(self):
         dialog = QFileDialog()
         dialog.setNameFilter("*pdf")
@@ -76,7 +89,7 @@ class MetadataPage(QWidget):
         if dialogSuccessful:
             selectedFiles = dialog.selectedFiles()
             self.metadata_file_label.setText(pathlist_to_str(selectedFiles))
-            
+
             self.author_line_edit.setText(get_author(pathlist_to_str(selectedFiles)))
             self.subject_line_edit.setText(get_subject(pathlist_to_str(selectedFiles)))
             self.title_line_edit.setText(get_title(pathlist_to_str(selectedFiles)))

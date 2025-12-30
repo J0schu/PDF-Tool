@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 
 class OCR(QWidget):
@@ -17,12 +17,10 @@ class OCR(QWidget):
         back_btn = QPushButton("Back")
         back_btn.clicked.connect(self.go_home.emit)
 
-
         bottom_layout = QHBoxLayout()
 
         bottom_layout.addWidget(back_btn)
         bottom_layout.addStretch()
-
 
         layout.addWidget(title)
         layout.addStretch()

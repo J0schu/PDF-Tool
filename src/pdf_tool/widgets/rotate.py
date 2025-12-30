@@ -1,26 +1,25 @@
-from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QFileDialog,
-    QLineEdit,
-    QCheckBox
-)
-from PySide6.QtCore import (
-    Signal,
-    Qt
-)
-from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtPdf import QPdfDocument
+from PySide6.QtPdfWidgets import QPdfView
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class Rotate(QWidget):
     go_home = Signal()
 
     def open_pdf(self):
-        path, _ = QFileDialog.getOpenFileNames(self, "Select File", "", "PDF Files (*.pdf)")
+        path, _ = QFileDialog.getOpenFileNames(
+            self, "Select File", "", "PDF Files (*.pdf)"
+        )
         if path:
             self.path_label.setText(f"{path[0]}")
             self.pdf_doc.load(path[0])
@@ -108,7 +107,6 @@ class Rotate(QWidget):
 
         bottom_layout.addWidget(back_btn)
         bottom_layout.addStretch()
-
 
         layout.addWidget(title)
         layout.addLayout(h_layout, stretch=2)
