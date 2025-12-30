@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QMessageBox, QFormLayout, QFileDialog
-from functions.pdf import get_author, get_subject, get_title, add_metadata
-from functions.fun import pathlist_to_str
+from pdf_tool.functions.pdf import get_author, get_subject, get_title, add_metadata
+from pdf_tool.functions.fun import pathlist_to_str
 
 class MetadataPage(QWidget):
     def __init__(self):

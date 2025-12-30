@@ -5,6 +5,7 @@ from PySide6.QtCore import Signal, Qt
 class StartPage(QWidget):
     go_page_merger = Signal()
     go_page_ocr = Signal()
+    go_page_rotate = Signal()
 
     def __init__(self):
         super().__init__()
@@ -15,14 +16,17 @@ class StartPage(QWidget):
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet("font-size: 20px;")
 
-        btn1 = QPushButton("Merger")
-        btn2 = QPushButton("OCR")
+        btn_merger = QPushButton("Merger")
+        btn_ocr = QPushButton("OCR")
+        btn_rotate = QPushButton("Rotate")
 
-        btn1.clicked.connect(self.go_page_merger.emit)
-        btn2.clicked.connect(self.go_page_ocr.emit)
+        btn_merger.clicked.connect(self.go_page_merger.emit)
+        btn_ocr.clicked.connect(self.go_page_ocr.emit)
+        btn_rotate.clicked.connect(self.go_page_rotate.emit)
 
         layout.addWidget(title)
         layout.addStretch()
-        layout.addWidget(btn1)
-        layout.addWidget(btn2)
+        layout.addWidget(btn_merger)
+        layout.addWidget(btn_ocr)
+        layout.addWidget(btn_rotate)
         layout.addStretch()

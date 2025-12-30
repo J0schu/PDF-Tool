@@ -3,7 +3,7 @@ from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtCore import Signal, Qt
 
-from functions.pdf import merger
+from pdf_tool.functions.pdf import merger
 
 class Merger(QWidget):
 

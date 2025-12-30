@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QApplication
 import sys
-from widgets.gui import MainWindow
+from pdf_tool.widgets.gui import MainWindow
 
 app = QApplication(sys.argv)
 
