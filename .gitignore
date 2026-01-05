@@ -16,3 +16,5 @@ pyvenv.cfg
 /.idea
 # etc
 *.ico
+.envrc
+flake.lock
