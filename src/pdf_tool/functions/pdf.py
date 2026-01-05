@@ -1,76 +1,48 @@
-from datetime import datetime
+from typing import Iterable
 
-from pypdf import PdfReader, PdfWriter
-
-time = datetime.utcnow().strftime(f"D\072%Y%m%d%H%M%S")
+import fitz
 
 
-def merger(pdfs, output_name, author="", title="", subject="", keywords=""):
-    merger = PdfWriter()
-    for pdf in pdfs:
-        merger.append(pdf)
-    merger.add_metadata(
-        {
-            "/Author": author,
-            "/Producer": "PDF-Tool",
-            "/Title": title,
-            "/Subject": subject,
-            "/Keywords": keywords,
-            "/CreationDate": time,
-            "/ModTime": time,
-        }
-    )
-    merger.write(output_name)
-    merger.close()
+def parse_pages(text: str, page_count: int) -> list[int]:
+    pages = set()
+
+    for part in text.split(","):
+        part = part.strip()
+        if "-" in part:
+            try:
+                a, b = map(int, part.split("-"))
+                if a > b:
+                    a, b = b, a
+                pages.update(range(a - 1, b))
+            except ValueError:
+                continue
+        elif part.isdigit():
+            pages.add(int(part) - 1)
+
+    return sorted(p for p in pages if 0 <= p < page_count)
 
 
-def get_author(filename):
-    reader = PdfReader(filename)
-    meta = reader.metadata
-    return meta.author
+def merge_pdfs(items: Iterable[tuple[str, str, str]], output_path: str) -> None:
+    """
+    items:
+        Iterable (pdf_path, mode, custom_text)
+        mode: 'all' | 'custom'
+    """
 
+    out = fitz.open()
 
-def get_subject(filename):
-    reader = PdfReader(filename)
-    meta = reader.metadata
-    return meta.subject
+    for path, mode, custom_text in items:
+        doc = fitz.open(path)
 
+        if mode == "all":
+            out.insert_pdf(doc)
 
-def get_title(filename):
-    reader = PdfReader(filename)
-    meta = reader.metadata
-    return meta.title
+        else:
+            pages = parse_pages(custom_text, doc.page_count)
+            for p in pages:
+                out.insert_pdf(doc, from_page=p, to_page=p)
 
+        doc.close()
 
-def add_keywords(filename, keywords):
-    writer = PdfWriter()
-    writer.add_metadata(
-        {
-            "/Keywords": keywords,
-        }
-    )
-    with open(filename, "wb") as f:
-        writer.write(f)
-
-
-def add_metadata(filename, author, title, subject, keywords, custom):
-    reader = PdfReader(filename)
-    writer = PdfWriter()
-    for page in reader.pages:
-        writer.add_page(page)
-    # add old meta data
-    metadata = reader.metadata
-    writer.add_metadata(metadata)
-    writer.add_metadata(
-        {
-            "/Author": author,
-            "/Producer": "PDF-Tool",
-            "/Title": title,
-            "/Subject": subject,
-            "/Keywords": keywords,
-            "/ModDate": time,
-            "/CustomField": custom,
-        }
-    )
-    with open(filename, "wb") as f:
-        writer.write(f)
+    out.save(output_path)
+    out.close()

@@ -1,19 +1,22 @@
+from typing import cast
+
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtPdf import QPdfDocument
-from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFileDialog,
     QHBoxLayout,
     QLabel,
     QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QVBoxLayout,
     QWidget,
 )
 
-from pdf_tool.functions.pdf import merger
+from pdf_tool.functions.pdf import merge_pdfs
+from pdf_tool.widgets.page_selector import PageSelector
+from pdf_tool.widgets.pdf_preview import PdfPreview
 
 
 class Merger(QWidget):
@@ -24,39 +27,56 @@ class Merger(QWidget):
         files, _ = QFileDialog.getOpenFileNames(
             self, "Select Files", "", "PDF Files (*.pdf)"
         )
-        self.list_widget.addItems(files)
+
+        for path in files:
+            item = QListWidgetItem()
+            item.setData(Qt.UserRole, path)
+
+            selector = PageSelector(path)
+            item.setSizeHint(selector.sizeHint())
+
+            self.list_widget.addItem(item)
+            self.list_widget.setItemWidget(item, selector)
 
     def merge(self):
-        files = [
-            self.list_widget.item(i).text() for i in range(self.list_widget.count())
-        ]
-        print(files)
-        if len(files) < 2:
-            ret = QMessageBox.critical(
-                self, "critical", "Select at least two PDFs", QMessageBox.Ok
-            )
+        if self.list_widget.count() < 2:
+            QMessageBox.critical(self, "Error", "Select at least two PDFs")
             return
-        user_mergename, _ = QFileDialog.getSaveFileName(
-            self, "Save File", "", "PDF File (*.pdf)"
+
+        output, _ = QFileDialog.getSaveFileName(
+            self, "Save File", "", "PDF Files (*.pdf)"
         )
-        if user_mergename:
-            mergename = user_mergename
-            if not user_mergename.lower().endswith(".pdf"):
-                mergename = user_mergename + ".pdf"
-            merger(files, mergename)
+        if not output:
+            return
+        if not output.lower().endswith(".pdf"):
+            output += ".pdf"
+
+        items = []
+
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            selector = cast(PageSelector, self.list_widget.itemWidget(item))
+
+            items.append(
+                (
+                    item.data(Qt.UserRole),
+                    selector.get_mode(),
+                    selector.get_custom_text(),
+                )
+            )
+
+        merge_pdfs(items, output)
 
     def remove_file(self):
-        self.pdf_doc.load("")
+        self.preview.clear()
         self.list_widget.takeItem(self.list_widget.currentRow())
 
     def clear_list(self):
-        self.pdf_doc.load("")
+        self.preview.clear()
         self.list_widget.clear()
 
     def show_preview(self, item):
-        file_path = item.text()
-        self.pdf_doc.load(file_path)
-        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+        self.preview.load_pdf(item.data(Qt.UserRole))
 
     def __init__(self):
         super().__init__()
@@ -77,13 +97,10 @@ class Merger(QWidget):
         self.list_widget.setDragDropMode(QAbstractItemView.InternalMove)
         self.list_widget.itemDoubleClicked.connect(self.show_preview)
 
-        self.pdf_view = QPdfView()
-        self.pdf_doc = QPdfDocument()
-        self.pdf_view.setDocument(self.pdf_doc)
-        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.preview = PdfPreview()
 
         list_prev.addWidget(self.list_widget)
-        list_prev.addWidget(self.pdf_view)
+        list_prev.addWidget(self.preview)
 
         # Horizontal Box with Add and Merge Buttons
         button_layout1 = QHBoxLayout()

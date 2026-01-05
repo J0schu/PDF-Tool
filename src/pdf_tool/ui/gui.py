@@ -1,9 +1,9 @@
 from PySide6.QtWidgets import QMainWindow, QStackedWidget
 
-from pdf_tool.widgets.merger import Merger
-from pdf_tool.widgets.ocr import OCR
-from pdf_tool.widgets.rotate import Rotate
-from pdf_tool.widgets.start_page import StartPage
+from pdf_tool.ui.merger import Merger
+from pdf_tool.ui.ocr import OCR
+from pdf_tool.ui.rotate import Rotate
+from pdf_tool.ui.start_page import StartPage
 
 
 class MainWindow(QMainWindow):

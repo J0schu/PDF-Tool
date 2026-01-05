@@ -12,8 +12,8 @@ authors = [
     { name = "Your Name", email = "you@example.com" }
 ]
 dependencies = [
-    "pypdf", 
-    "pyside6"
+    "pyside6",
+    "pymupdf"
 ]
 
 [project.scripts]

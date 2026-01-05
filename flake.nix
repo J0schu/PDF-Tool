@@ -5,15 +5,20 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
   };
 
-  outputs = { self, nixpkgs }:
+  outputs =
+    { nixpkgs, ... }:
     let
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
     in
     {
       # The package definition
-      packages = forAllSystems (system:
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in
@@ -25,12 +30,12 @@
             src = ./.;
             # Runtime dependencies
             propagatedBuildInputs = with pkgs.python3Packages; [
-                pyside6
-                pypdf
+              pyside6
+              pymupdf
             ];
             nativeBuildInputs = [
-                pkgs.python3Packages.setuptools
-                pkgs.python3Packages.wheel
+              pkgs.python3Packages.setuptools
+              pkgs.python3Packages.wheel
             ];
 
             # Non-Python dependencies
@@ -38,21 +43,26 @@
 
             doCheck = false;
           };
-        });
-      devShells = forAllSystems (system:
+        }
+      );
+      devShells = forAllSystems (
+        system:
         let
           pkgs = nixpkgsFor.${system};
         in
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              (python3.withPackages (ps: with ps; [
-                ocrmypdf
-                pypdf
-                pyside6
-              ]))
+              (python3.withPackages (
+                ps: with ps; [
+                  ocrmypdf
+                  pyside6
+                  pymupdf
+                ]
+              ))
             ];
           };
-        });
+        }
+      );
     };
 }
