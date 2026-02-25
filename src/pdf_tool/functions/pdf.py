@@ -46,3 +46,13 @@ def merge_pdfs(items: Iterable[tuple[str, str, str]], output_path: str) -> None:
 
     out.save(output_path)
     out.close()
+
+
+def rotate_pdfs(doc: fitz.Document, angle: int, pages_to_rotate: list[int]):
+    """Modifies the fitz document object in place."""
+    for p_index in pages_to_rotate:
+        if 0 <= p_index < doc.page_count:
+            page = doc[p_index]
+            new_rot = (page.rotation + angle) % 360
+            page.set_rotation(new_rot)
+    return doc

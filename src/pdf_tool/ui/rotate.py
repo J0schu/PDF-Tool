@@ -1,16 +1,19 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtPdf import QPdfDocument
-from PySide6.QtPdfWidgets import QPdfView
 from PySide6.QtWidgets import (
     QCheckBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
     QVBoxLayout,
     QWidget,
 )
+
+from pdf_tool.functions.pdf import parse_pages, rotate_pdfs
+from pdf_tool.widgets.pdf_preview import PdfPreview
 
 
 class Rotate(QWidget):
@@ -22,19 +25,55 @@ class Rotate(QWidget):
         )
         if path:
             self.path_label.setText(f"{path[0]}")
-            self.pdf_doc.load(path[0])
-            self.pdf_view.setDocument(self.pdf_doc)
+            self.preview.load_pdf(path[0])
 
     def on_checkbox_changed(self, checked: bool):
         self.input_label.setVisible(not checked)
         self.text_input.setVisible(not checked)
 
     def rotate_pdf(self):
-        angle = self.angle_input.text()
-        pass
+        doc = self.preview._doc
+        if not doc:
+            QMessageBox.critical(self, "Error", "No PDF Selected")
+            return
+        if not self.angle_input.text():
+            QMessageBox.critical(self, "Error", "Enter an angle")
+            return
+
+        try:
+            angle = int(self.angle_input.text())
+        except ValueError:
+            angle = 90
+
+        total_pages = doc.page_count
+        if self.checkbox.isChecked():
+            pages = list(range(total_pages))
+        else:
+            pages = parse_pages(self.text_input.text(), total_pages)
+
+        rotate_pdfs(doc, angle, pages)
+        self.preview._render()
 
     def save_pdf(self):
-        pass
+        doc = self.preview._doc
+        if not doc:
+            QMessageBox.critical(self, "Error", "No PDF to save")
+            return
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Save Rotated File", "", "PDF Files (*.pdf)"
+        )
+        if path:
+            doc.save(path)
+
+    def clear_pdf(self):
+        self.preview.clear()
+        self.input_label.setVisible(False)
+        self.text_input.setVisible(False)
+        self.angle_input.setPlaceholderText("90")
+        self.angle_input.setText("")
+        self.text_input.setText("")
+        self.checkbox.setChecked(True)
+        self.path_label.setText("No PDF Selected")
 
     def __init__(self):
         super().__init__()
@@ -58,9 +97,9 @@ class Rotate(QWidget):
 
         self.path_label = QLabel("No PDF Selected")
 
-        checkbox = QCheckBox("Rotate all Pages")
-        checkbox.setChecked(True)
-        checkbox.toggled.connect(self.on_checkbox_changed)
+        self.checkbox = QCheckBox("Rotate all Pages")
+        self.checkbox.setChecked(True)
+        self.checkbox.toggled.connect(self.on_checkbox_changed)
 
         self.input_label = QLabel("Select which pages to rotate:\n (1-5, 8, 11-13)")
         self.input_label.setVisible(False)
@@ -70,36 +109,35 @@ class Rotate(QWidget):
 
         angle_label = QLabel("Angle:")
 
-        angle_input = QLineEdit()
-
         self.angle_input = QLineEdit()
-        self.angle_input.setVisible(False)
+        self.angle_input.setPlaceholderText("90")
 
-        rotate_btn = QPushButton("Rotate")
-        rotate_btn.clicked.connect(self.rotate_pdf)
+        btn_rotate = QPushButton("Rotate")
+        btn_rotate.clicked.connect(self.rotate_pdf)
 
-        save_btn = QPushButton("Save")
-        save_btn.clicked.connect(self.save_pdf)
+        btn_save = QPushButton("Save")
+        btn_save.clicked.connect(self.save_pdf)
 
-        self.pdf_view = QPdfView()
+        btn_clear = QPushButton("Clear")
+        btn_clear.clicked.connect(self.clear_pdf)
+
+        self.preview = PdfPreview()
         self.pdf_doc = QPdfDocument()
-        self.pdf_view.setDocument(self.pdf_doc)
-        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
 
         v_layout.addWidget(open_btn)
         v_layout.addWidget(self.path_label)
         v_layout.addWidget(angle_label)
-        v_layout.addWidget(angle_input)
-        v_layout.addWidget(checkbox)
+        v_layout.addWidget(self.angle_input)
+        v_layout.addWidget(self.checkbox)
         v_layout.addWidget(self.input_label)
         v_layout.addWidget(self.text_input)
-        v_layout.addWidget(self.angle_input)
         v_layout.addStretch()
-        v_layout.addWidget(rotate_btn)
-        v_layout.addWidget(save_btn)
+        v_layout.addWidget(btn_rotate)
+        v_layout.addWidget(btn_save)
+        v_layout.addWidget(btn_clear)
 
         h_layout.addLayout(v_layout, stretch=1)
-        h_layout.addWidget(self.pdf_view, stretch=3)
+        h_layout.addWidget(self.preview, stretch=2)
 
         # bottom Layout
         layout.addLayout(v_layout)
